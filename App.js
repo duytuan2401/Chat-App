@@ -6,6 +6,7 @@ import { AddToChatScreen, HomeScreen, LoginScreen, SignUpScreen, SplashScreen } 
 
 import {Provider} from 'react-redux';
 import Store from "./context/store";
+import ProfileScreen from "./screens/ProfileScreen";
 
 
 const Stack = createNativeStackNavigator();
@@ -20,6 +21,7 @@ const App = () => {
           <Stack.Screen name="SignUpScreen" component={SignUpScreen} />
           <Stack.Screen name="HomeScreen" component={HomeScreen} />
           <Stack.Screen name="AddToChatScreen" component={AddToChatScreen} />
+          <Stack.Screen name="ProfileScreen" component={ProfileScreen} />
         </Stack.Navigator>
       </Provider>
     </NavigationContainer>
