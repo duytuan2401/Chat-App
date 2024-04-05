@@ -21,8 +21,6 @@ export default function SignUpScreen() {
     const [avatar, setAvatar] = useState(avatars[0]?.image.asset.url);
     const [isAvatarMenu, setIsAvatarMenu] = useState(false);
     const [getEmailValidationStatus, setGetEmailValidationStatus] = useState(false);
-    const [verificationCode, setVerificationCode] = useState('');
-    const [emailSent, setEmailSent] = useState(false);
     const [alert, setAlert] = useState(false);
     const [alertMessage, setAlertMessage] = useState(null);
 
@@ -37,15 +35,22 @@ export default function SignUpScreen() {
         if (getEmailValidationStatus && email !== "") {
             await createUserWithEmailAndPassword(firebaseAuth, email, password)
                 .then(async (userCred) => {
-                    const data = {
-                        _id: userCred?.user.uid,
-                        fullName: name,
-                        profilePic: avatar,
-                        providerData: userCred.user.providerData[0],
-                    };
 
-                    await setDoc(doc(firestoreDB, 'users', userCred?.user.uid), data);
-                    navigation.navigate("LoginScreen");
+                    sendEmailVerification(firebaseAuth.currentUser);
+
+                    if (sendEmailVerification) {
+                        const data = {
+                            _id: userCred?.user.uid,
+                            fullName: name,
+                            profilePic: avatar,
+                            providerData: userCred.user.providerData[0],
+                        };
+    
+                        await setDoc(doc(firestoreDB, 'users', userCred?.user.uid), data);
+                        navigation.navigate("LoginScreen");
+                    }
+
+                    
                 })
                 .catch(err => {
                     console.log('Error creating user:', err.message);
@@ -70,50 +75,42 @@ export default function SignUpScreen() {
     };
 
     // const handleSignUp = async () => {
-    //     try {
-    //         const userCredential = await createUserWithEmailAndPassword(firebaseAuth, email, password);
-    //         const userCred = userCredential.user;
+    //     if (getEmailValidationStatus && email !== "") {
+    //         await createUserWithEmailAndPassword(firebaseAuth, email, password).then(async (userCred) => {
 
-    //         // Gửi email xác thực
-    //         await sendEmailVerification(userCred);
+    //             sendEmailVerification(firebaseAuth.currentUser);
 
-    //         // Đặt trạng thái đã gửi email xác thực
-    //         setEmailSent(true);
+    //             const userData = {
+    //                 _id: userCred.uid,
+    //                 fullName: name,
+    //                 profilePic: avatar,
+    //                 providerData: userCred.providerData[0],
+    //             };
+    //             await setDoc(doc(firestoreDB, 'users', userCred.uid), userData);
 
-    //         // Lưu thông tin người dùng vào cơ sở dữ liệu
-    //         const userData = {
-    //             _id: userCred.uid,
-    //             fullName: name,
-    //             profilePic: avatar,
-    //             providerData: userCred.providerData[0],
-    //         };
+    //             })
+    //             .catch(err => {
+    //                 console.log('Error creating user:', err.message);
+    //                 if (err.message.includes("(auth/invalid-email)")) {
+    //                     setAlert(true);
+    //                     setAlertMessage("Invalid Email Address");
+    //                 }
+    //                 if (err.message.includes("(auth/weak-password)")) {
+    //                     setAlert(true);
+    //                     setAlertMessage("Password should be at least 6 characters long.");
+    //                 }
+    //                 if (err.message.includes("(auth/email-already-in-use)")) {
+    //                     setAlert(true);
+    //                     setAlertMessage("Email already in use");
+    //                 }
 
-    //         await setDoc(doc(firestoreDB, 'users', userCred.uid), userData);
-    //     } catch (error) {
-    //         Alert.alert('Error', error.message);
+    //                 setInterval(() => {
+    //                     setAlert(false);
+    //                 }, 5000);
+    //             });
     //     }
     // };
 
-    // const handleVerifyEmail = async () => {
-    //     try {
-    //         // Lấy mã xác thực từ cơ sở dữ liệu Firebase
-    //         const docRef = doc(firestoreDB, 'verificationCodes', firebaseAuth.currentUser.uid);
-    //         const docSnap = await getDoc(docRef);
-    //         const savedCode = docSnap.data().code;
-
-    //         // So sánh mã xác thực
-    //         if (verificationCode === savedCode) {
-    //             Alert.alert('Success', 'Email verification successful!');
-    //             setTimeout(()=>{
-    //                 navigation.replace("LoginScreen");
-    //             }, 1000000);
-    //         } else {
-    //             Alert.alert('Error', 'Invalid verification code');
-    //         }
-    //     } catch (error) {
-    //         Alert.alert('Error', 'Could not verify email');
-    //     }
-    // };
     return (
         <View style={{ flex: 1, alignItems: 'center', justifyContent: 'flex-start' }}>
             <Image 
@@ -215,19 +212,7 @@ export default function SignUpScreen() {
                         placeholder="Password" 
                         isPass={true} 
                         setStatValue={setPassword}
-                    />
-                    {/* {emailSent && (
-                        <View>
-                            <TextInput
-                                placeholder="Verification Code"
-                                onChangeText={setVerificationCode}
-                                value={verificationCode}
-                            />
-                            <TouchableOpacity onPress={handleVerifyEmail} >
-                                <Text>Verify Email</Text>
-                            </TouchableOpacity>
-                        </View>
-                    )} */}
+                    />  
                     <TouchableOpacity onPress={handleSignUp}
                         style={{ 
                             width: '80%', 

@@ -1,9 +1,10 @@
 import { View, Text, Image, SafeAreaView, TouchableOpacity, ScrollView, ActivityIndicator, TextInput} from 'react-native'
-import React, { useState } from 'react'
+import React, { useState, useRef} from 'react'
 import { Logo } from '../assets';
 import {useSelector} from 'react-redux'
 import { Ionicons, FontAwesome5 } from '@expo/vector-icons'
 import {useNavigation} from '@react-navigation/native';
+import { firebaseAuth } from '../config/firebase.config';
 
 
 export default function HomeScreen() {
@@ -11,14 +12,63 @@ export default function HomeScreen() {
   const user = useSelector((state) => state.user.user);
   const [isLoading, setIsLoading] = useState(false);
   const navigation = useNavigation();
+  const scrollViewRef = useRef(null);
+  const [showOptions, setShowOptions] = useState(false);
+  const [loading, setLoading] = useState(false);
+
+  const handleProfilePicPress = () => {
+    setShowOptions(!showOptions);
+  };
+
+  const handleSignOut  = async () => {
+    try {
+      navigation.navigate("LoginScreen");
+      setLoading(true);
+      await signOut(firebaseAuth); // Thực hiện đăng xuất từ Firebase Authentication
+
+    } catch (error) {
+      console.error('Error signing out:', error.message);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleNavigateToProfile = () => {
+    navigation.navigate('ProfileScreen');
+  };
 
   return (
     <View style={{flex: 1, backgroundColor: "#87CEEB", paddingTop: 30 }}>
         <SafeAreaView>
           <View style={{width: '100%', flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', paddingVertical: 8, paddingHorizontal: 16}}>
               <Image source={Logo} style={{width: 48, height: 48}} resizeMode='contain' />
-              <TouchableOpacity style={{width: 48, height: 48, borderRadius: 40, borderWidth: 2, borderColor: 'white', alignItems: 'center', justifyContent: 'center'}}>
-                  <Image source={{uri: user?.profilePic}} style={{width: '100%', height: '100%'}} resizeMode='cover' />
+              <TouchableOpacity style={{ width: 48, height: 48, borderRadius: 40, borderWidth: 2, borderColor: 'white', alignItems: 'center', justifyContent: 'center' }}
+               onPress={handleProfilePicPress}
+              >
+                  <Image source={{ uri: user?.profilePic }} style={{ width: '100%', height: '100%' }} resizeMode='cover' />
+                  {showOptions && (
+                    <ScrollView 
+                      ref={scrollViewRef} 
+                      style={{ 
+                        position: 'absolute', 
+                        top: 0, 
+                        right: 0, 
+                        backgroundColor: '#fff', 
+                        borderRadius: 8, 
+                        paddingVertical: 4, 
+                        paddingHorizontal: 8 
+                      }}
+                    >
+                      <View style={{ width: '100%' }}>
+                        <TouchableOpacity onPress={handleSignOut} disabled={loading}>
+                          <Text style={{ marginBottom: 8 }}>Sign out</Text>
+                        </TouchableOpacity>
+                        <TouchableOpacity onPress={handleNavigateToProfile}>
+                          <Text>Profile</Text>
+                        </TouchableOpacity>
+                      </View>
+                    </ScrollView>
+                  )}
               </TouchableOpacity>
               
           </View>
@@ -28,7 +78,7 @@ export default function HomeScreen() {
             </TouchableOpacity>
             <TextInput 
               placeholder="Search"
-              style={{ flex: 1, height: 40, borderColor: 'gray', borderWidth: 1, borderRadius: 8, paddingHorizontal: 10}}
+              style={{ flex: 1, height: 40, borderColor: 'black', borderWidth: 1, borderRadius: 8, paddingHorizontal: 10}}
             />
           </View>
           

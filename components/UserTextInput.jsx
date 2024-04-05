@@ -1,4 +1,4 @@
-import { View, Text, TextInput, TouchableOpacity, StyleSheet } from 'react-native'
+import { View, Text, TextInput, TouchableOpacity, StyleSheet, Keyboard  } from 'react-native'
 import React, { useLayoutEffect, useState } from 'react'
 import { Entypo, MaterialIcons} from '@expo/vector-icons'
 
@@ -52,6 +52,7 @@ export default function UserTextInput({placeholder, isPass, setStatValue, setGet
                 value={value}
                 onChangeText={handleTextChanged}
                 secureTextEntry={isPass && showPass}
+                // onFocus={() => Keyboard.dismiss()}
             />
             <View>
             {isPass && (

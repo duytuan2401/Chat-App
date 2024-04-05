@@ -1,9 +1,9 @@
-import { View, Text, Image, Dimensions, TouchableOpacity } from 'react-native'
+import { View, Text, Image, Dimensions, TouchableOpacity,Alert } from 'react-native'
 import React, { useState } from 'react'
 import {BGImage, Logo} from "../assets"
 import { UserTextInput } from '../components';
 import {useNavigation} from '@react-navigation/native';
-import { signInWithEmailAndPassword } from 'firebase/auth';
+import { signInWithEmailAndPassword, sendPasswordResetEmail  } from 'firebase/auth';
 import { firebaseAuth, firestoreDB } from '../config/firebase.config';
 import { doc, getDoc } from 'firebase/firestore';
 import {useDispatch} from 'react-redux';
@@ -56,12 +56,27 @@ export default function LoginScreen() {
             });
         }
     };
+
+    const forgetPassword = () => {
+        sendPasswordResetEmail(firebaseAuth, email) 
+            .then(() => {
+                setAlert(true);
+                setAlertMessage('Please check your email to reset your password');
+            })
+            .catch((error) => {
+                console.error('Error sending password reset email:', error);
+                setAlert(true);
+                setAlertMessage("Please enter your email");
+            });
+    };
+
+
     return (
         <View style={{ flex: 1, alignItems: 'center', justifyContent: 'flex-start' }}>
             <Image 
                 source={BGImage} 
                 resizeMode='cover' 
-                style={{ height: 250, width: screenWidth }}
+                style={{ height: 220, width: screenWidth }}
             />
 
             {/* Main View */}
@@ -93,7 +108,7 @@ export default function LoginScreen() {
                         fontWeight: '600' 
                     }}
                 >
-                    Welcome Back!
+                    Sign In
                 </Text>
 
                 <View style={{ width: '100%', alignItems: 'center', justifyContent: 'center' }}>
@@ -116,7 +131,7 @@ export default function LoginScreen() {
                         isPass={true} 
                         setStatValue={setPassword}
                     />
-                    
+                   
                     <TouchableOpacity
                         onPress={handleLogin}
                         style={{ 
@@ -137,6 +152,13 @@ export default function LoginScreen() {
                         <TouchableOpacity onPress={()=>navigation.navigate('SignUpScreen')}>
                             <Text style={{ fontSize: 16, fontWeight: 'bold', color: '#007bff' }}> Create Here</Text>
                         </TouchableOpacity>
+                    </View>
+                    <View  style={{
+                            width: '100%', paddingVertical: 20, flexDirection: 'row', alignItems: 'center', justifyContent: 'center' 
+                        }}>
+                            <TouchableOpacity onPress={forgetPassword} >
+                                <Text style={{ color: '#333', fontSize: 18 }}>Forgot Password?</Text>
+                            </TouchableOpacity>
                     </View>
 
                 </View>
