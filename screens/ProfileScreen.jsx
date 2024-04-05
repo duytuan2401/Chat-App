@@ -282,7 +282,7 @@ const ProfileScreen =() => {
             <View style={{ width: '100%', paddingHorizontal: 6, paddingVertical: 4, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
                 <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                     <MaterialIcons name="security" size={24} color="#555" />
-                    <Text style={{ fontSize: 16, fontWeight: 'bold', color: 'var(--primaryText)', paddingLeft: 3 }}>
+                    <Text style={{ fontSize: 16, fontWeight: 'bold', color: 'black', paddingLeft: 3 }}>
                         Privacy
                     </Text>
                 </View>
@@ -292,7 +292,7 @@ const ProfileScreen =() => {
             <View style={{ width: '100%', paddingHorizontal: 6, paddingVertical: 4, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
                 <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                     <MaterialIcons name="message" size={24} color="#555" />
-                    <Text style={{ fontSize: 16, fontWeight: 'bold', color: 'var(--primaryText)', paddingLeft: 3 }}>
+                    <Text style={{ fontSize: 16, fontWeight: 'bold', color: 'black', paddingLeft: 3 }}>
                         Group
                     </Text>
                 </View>
@@ -302,21 +302,26 @@ const ProfileScreen =() => {
             <View style={{ width: '100%', paddingHorizontal: 6, paddingVertical: 4, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
                 <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                     <MaterialIcons name="music-note" size={24} color="#555" />
-                    <Text style={{ fontSize: 16, fontWeight: 'bold', color: 'var(--primaryText)', paddingLeft: 3 }}>
+                    <Text style={{ fontSize: 16, fontWeight: 'bold', color: 'black', paddingLeft: 3 }}>
                         Media's & Downloads
                     </Text>
                 </View>
                 <MaterialIcons name="chevron-right" size={32} color="#555" />
             </View>
-
+            
             <View style={{ width: '100%', paddingHorizontal: 6, paddingVertical: 4, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
-                <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                    <MaterialIcons name="person" size={24} color="#555" />
-                    <Text style={{ fontSize: 16, fontWeight: 'bold', color: 'var(--primaryText)', paddingLeft: 3 }}>
-                        Account
-                    </Text>
-                </View>
-                <MaterialIcons name="chevron-right" size={32} color="#555" />
+                <TouchableOpacity
+                    onPress={() => navigation.navigate('AccountScreen')}
+                    style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', paddingVertical: 4, paddingHorizontal: 6 }}
+                >
+                    <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                        <MaterialIcons name="person" size={24} color="#555" />
+                        <Text style={{ fontSize: 16, fontWeight: 'bold', color: 'black', paddingLeft: 3 }}>
+                            Account
+                        </Text>
+                    </View>
+                    <MaterialIcons name="chevron-right" size={32} color="#555" />
+                </TouchableOpacity>
             </View>
 
             <TouchableOpacity onPress={handleLogout} style={{ width: '100%', paddingHorizontal: 6, paddingVertical: 4, flexDirection: 'row', alignItems: 'center', justifyContent: 'center' }}>
