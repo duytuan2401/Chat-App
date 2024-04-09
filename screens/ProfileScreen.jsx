@@ -310,18 +310,19 @@ const ProfileScreen =() => {
             </View>
             
             <View style={{ width: '100%', paddingHorizontal: 6, paddingVertical: 4, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
-                <TouchableOpacity
-                    onPress={() => navigation.navigate('AccountScreen')}
-                    style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', paddingVertical: 4, paddingHorizontal: 6 }}
-                >
-                    <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                    <TouchableOpacity
+                        onPress={() => navigation.navigate('AccountScreen')}
+                        style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between'}}
+                    >
                         <MaterialIcons name="person" size={24} color="#555" />
                         <Text style={{ fontSize: 16, fontWeight: 'bold', color: 'black', paddingLeft: 3 }}>
                             Account
                         </Text>
-                    </View>
-                    <MaterialIcons name="chevron-right" size={32} color="#555" />
-                </TouchableOpacity>
+                        
+                        <MaterialIcons name="chevron-right" size={32} color="#555" />
+                    </TouchableOpacity>
+                </View>
             </View>
 
             <TouchableOpacity onPress={handleLogout} style={{ width: '100%', paddingHorizontal: 6, paddingVertical: 4, flexDirection: 'row', alignItems: 'center', justifyContent: 'center' }}>

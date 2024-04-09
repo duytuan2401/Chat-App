@@ -78,7 +78,7 @@ export default function HomeScreen() {
             </TouchableOpacity>
             <TextInput 
               placeholder="Search"
-              style={{ flex: 1, height: 40, borderColor: 'black', borderWidth: 1, borderRadius: 8, paddingHorizontal: 10}}
+              style={{ flex: 1, height: 40, borderColor: 'black', borderWidth: 1, borderRadius: 8, paddingHorizontal: 10, borderColor: 'transparent'}}
             />
           </View>
           
