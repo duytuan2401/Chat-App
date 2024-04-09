@@ -1,20 +1,22 @@
 import { View, Text, Image, SafeAreaView, TouchableOpacity, ScrollView, ActivityIndicator, TextInput} from 'react-native'
-import React, { useState, useRef} from 'react'
+import React, { useState, useRef, useLayoutEffect} from 'react'
 import { Logo } from '../assets';
 import {useSelector} from 'react-redux'
 import { Ionicons, FontAwesome5 } from '@expo/vector-icons'
 import {useNavigation} from '@react-navigation/native';
-import { firebaseAuth } from '../config/firebase.config';
+import { firebaseAuth, firestoreDB } from '../config/firebase.config';
+import { collection, orderBy, query } from 'firebase/firestore';
 
 
 export default function HomeScreen() {
   
   const user = useSelector((state) => state.user.user);
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
   const navigation = useNavigation();
   const scrollViewRef = useRef(null);
   const [showOptions, setShowOptions] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [chat, setChats] = useState(null)
 
   const handleProfilePicPress = () => {
     setShowOptions(!showOptions);
@@ -36,6 +38,10 @@ export default function HomeScreen() {
   const handleNavigateToProfile = () => {
     navigation.navigate('ProfileScreen');
   };
+
+  useLayoutEffect(() => {
+    const chatQuery = query(collection(firestoreDB, "chats"), orderBy("_id", "desc"))
+  }, [])
 
   return (
     <View style={{flex: 1, backgroundColor: "#87CEEB", paddingTop: 30 }}>
