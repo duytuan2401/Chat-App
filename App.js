@@ -2,7 +2,7 @@ import { View, Text, TouchableOpacity } from "react-native";
 import React from "react";
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import { AddToChatScreen, HomeScreen, LoginScreen, SignUpScreen, SplashScreen } from "./screens";
+import { AddToChatScreen, ChatScreen, HomeScreen, LoginScreen, SignUpScreen, SplashScreen } from "./screens";
 
 import {Provider} from 'react-redux';
 import Store from "./context/store";
@@ -24,6 +24,8 @@ const App = () => {
           <Stack.Screen name="AddToChatScreen" component={AddToChatScreen} />
           <Stack.Screen name="ProfileScreen" component={ProfileScreen} />
           <Stack.Screen name="AccountScreen" component={AccountScreen} />
+          <Stack.Screen name="ChatScreen" component={ChatScreen} />
+          
         </Stack.Navigator>
       </Provider>
     </NavigationContainer>

@@ -5,7 +5,7 @@ import {useSelector} from 'react-redux'
 import { Ionicons, FontAwesome5 } from '@expo/vector-icons'
 import {useNavigation} from '@react-navigation/native';
 import { firebaseAuth, firestoreDB } from '../config/firebase.config';
-import { collection, orderBy, query } from 'firebase/firestore';
+import { collection, doc, onSnapshot, orderBy, query } from 'firebase/firestore';
 
 
 export default function HomeScreen() {
@@ -40,7 +40,19 @@ export default function HomeScreen() {
   };
 
   useLayoutEffect(() => {
-    const chatQuery = query(collection(firestoreDB, "chats"), orderBy("_id", "desc"))
+    const chatQuery = query(
+      collection(firestoreDB, "chats"),
+      orderBy("_id", "desc")
+    );
+
+    const unsubscribe = onSnapshot(chatQuery, (querySnapshot)=>{
+      const chatRooms = querySnapshot.docs.map(doc => doc.data())
+      setChats(chatRooms)
+      setIsLoading(false)
+    })
+
+    //Return the unsubscribe func to stop listening to the updates
+    return unsubscribe
   }, [])
 
   return (
@@ -105,14 +117,11 @@ export default function HomeScreen() {
                 </View>
               ) : (
                 <>
-                  <MessageCard />
-                  <MessageCard />
-                  <MessageCard />
-                  <MessageCard />
-                  <MessageCard />
-                  <MessageCard />
-                  <MessageCard />
-                  
+                  {chats && chats?.length > 0 ? (<>
+                  {chats?.map(room =>{
+                    <MessageCard key={room._id} room={room}/>
+                  })}
+                  </>) : (<></>)}
                 </>
               )}
 
@@ -125,9 +134,12 @@ export default function HomeScreen() {
   )
 }
 
-const MessageCard = () => {
+const MessageCard = ({room}) => {
+  const navigation = useNavigation()
   return (
-    <TouchableOpacity style={{width: '100%', flexDirection: 'row', alignItems: 'center', justifyContent: 'flex-start', paddingVertical: 8}}>
+    <TouchableOpacity 
+      onPress={() => navigation.navigate("ChatScreen", {room : room})}
+      style={{width: '100%', flexDirection: 'row', alignItems: 'center', justifyContent: 'flex-start', paddingVertical: 8}}>
       {/* images */}
       <View style={{width: 64, height: 64, borderRadius: 32, alignItems: 'center', borderWidth: 2, borderColor: 'primary', padding: 1, justifyContent: 'center'}}>
         <FontAwesome5 name="users" size={24} color="#555" />
@@ -135,7 +147,7 @@ const MessageCard = () => {
       {/* content */}
       <View style={{flex: 1, flexDirection: 'column', alignItems: 'flex-start', justifyContent: 'center', marginLeft: 16}}>
         <Text style={{color: '#333', fontSize: 16, fontWeight: 'bold', textTransform: 'capitalize'}}>
-          Message title
+          {room.chatName}
         </Text>
         <Text style={{color: 'primaryText', fontSize: 14}}>
           Content!
