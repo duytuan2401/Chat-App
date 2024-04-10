@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import {
   View,
   Text,
@@ -16,14 +17,26 @@ import { useNavigation } from "@react-navigation/native";
 import { firebaseAuth, firestoreDB } from "../config/firebase.config";
 import { collection, onSnapshot, orderBy, query } from "firebase/firestore";
 import { signOut } from "firebase/auth";
+=======
+import { View, Text, Image, SafeAreaView, TouchableOpacity, ScrollView, ActivityIndicator, TextInput} from 'react-native'
+import React, { useState, useRef, useLayoutEffect} from 'react'
+import { Logo } from '../assets';
+import {useSelector} from 'react-redux'
+import { Ionicons, FontAwesome5 } from '@expo/vector-icons'
+import {useNavigation} from '@react-navigation/native';
+import { firebaseAuth, firestoreDB } from '../config/firebase.config';
+import { collection, doc, onSnapshot, orderBy, query } from 'firebase/firestore';
+
+>>>>>>> 1885612b7baee41efa14251978bd3eed937f962d
 
 export default function HomeScreen() {
   const user = useSelector((state) => state.user.user);
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
   const navigation = useNavigation();
   const scrollViewRef = useRef(null);
   const [showOptions, setShowOptions] = useState(false);
   const [loading, setLoading] = useState(false);
+<<<<<<< HEAD
   const [chats, setChats] = useState(null);
 
   useLayoutEffect(() => {
@@ -41,6 +54,9 @@ export default function HomeScreen() {
     // Return the unsubscribe
     return unsubscribe;
   }, []);
+=======
+  const [chat, setChats] = useState(null)
+>>>>>>> 1885612b7baee41efa14251978bd3eed937f962d
 
   const handleProfilePicPress = () => {
     setShowOptions(!showOptions);
@@ -62,7 +78,24 @@ export default function HomeScreen() {
     navigation.navigate("ProfileScreen");
   };
 
+  useLayoutEffect(() => {
+    const chatQuery = query(
+      collection(firestoreDB, "chats"),
+      orderBy("_id", "desc")
+    );
+
+    const unsubscribe = onSnapshot(chatQuery, (querySnapshot)=>{
+      const chatRooms = querySnapshot.docs.map(doc => doc.data())
+      setChats(chatRooms)
+      setIsLoading(false)
+    })
+
+    //Return the unsubscribe func to stop listening to the updates
+    return unsubscribe
+  }, [])
+
   return (
+<<<<<<< HEAD
     <View style={{ flex: 1, backgroundColor: "white", paddingTop: 30 }}>
       <SafeAreaView>
         <View
@@ -96,6 +129,49 @@ export default function HomeScreen() {
               source={{ uri: user?.profilePic }}
               style={{ width: "100%", height: "100%" }}
               resizeMode="cover"
+=======
+    <View style={{flex: 1, backgroundColor: "#87CEEB", paddingTop: 30 }}>
+        <SafeAreaView>
+          <View style={{width: '100%', flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', paddingVertical: 8, paddingHorizontal: 16}}>
+              <Image source={Logo} style={{width: 48, height: 48}} resizeMode='contain' />
+              <TouchableOpacity style={{ width: 48, height: 48, borderRadius: 40, borderWidth: 2, borderColor: 'white', alignItems: 'center', justifyContent: 'center' }}
+               onPress={handleProfilePicPress}
+              >
+                  <Image source={{ uri: user?.profilePic }} style={{ width: '100%', height: '100%' }} resizeMode='cover' />
+                  {showOptions && (
+                    <ScrollView 
+                      ref={scrollViewRef} 
+                      style={{ 
+                        position: 'absolute', 
+                        top: 0, 
+                        right: 0, 
+                        backgroundColor: '#fff', 
+                        borderRadius: 8, 
+                        paddingVertical: 4, 
+                        paddingHorizontal: 8 
+                      }}
+                    >
+                      <View style={{ width: '100%' }}>
+                        <TouchableOpacity onPress={handleSignOut} disabled={loading}>
+                          <Text style={{ marginBottom: 8 }}>Sign out</Text>
+                        </TouchableOpacity>
+                        <TouchableOpacity onPress={handleNavigateToProfile}>
+                          <Text>Profile</Text>
+                        </TouchableOpacity>
+                      </View>
+                    </ScrollView>
+                  )}
+              </TouchableOpacity>
+              
+          </View>
+          <View style={{flexDirection: 'row', alignItems: 'center', flex: 1, marginRight: 20, marginLeft: 20, marginTop: 20}}>
+            <TouchableOpacity style={{marginRight: 8}}>
+              <Ionicons name="search" size={24} color="black" />
+            </TouchableOpacity>
+            <TextInput 
+              placeholder="Search"
+              style={{ flex: 1, height: 40, borderColor: 'black', borderWidth: 1, borderRadius: 8, paddingHorizontal: 10, borderColor: 'transparent'}}
+>>>>>>> 1885612b7baee41efa14251978bd3eed937f962d
             />
             {showOptions && (
               <ScrollView
@@ -118,6 +194,7 @@ export default function HomeScreen() {
                     <Text>Profile</Text>
                   </TouchableOpacity>
                 </View>
+<<<<<<< HEAD
               </ScrollView>
             )}
           </TouchableOpacity>
@@ -147,6 +224,17 @@ export default function HomeScreen() {
             }}
           />
         </View>
+=======
+              ) : (
+                <>
+                  {chats && chats?.length > 0 ? (<>
+                  {chats?.map(room =>{
+                    <MessageCard key={room._id} room={room}/>
+                  })}
+                  </>) : (<></>)}
+                </>
+              )}
+>>>>>>> 1885612b7baee41efa14251978bd3eed937f962d
 
         {/* Scrolling view */}
         <ScrollView
@@ -209,6 +297,7 @@ export default function HomeScreen() {
   );
 }
 
+<<<<<<< HEAD
 const MessageCard = ({ room }) => {
   const navigation = useNavigation();
   return (
@@ -222,6 +311,14 @@ const MessageCard = ({ room }) => {
         paddingVertical: 8,
       }}
     >
+=======
+const MessageCard = ({room}) => {
+  const navigation = useNavigation()
+  return (
+    <TouchableOpacity 
+      onPress={() => navigation.navigate("ChatScreen", {room : room})}
+      style={{width: '100%', flexDirection: 'row', alignItems: 'center', justifyContent: 'flex-start', paddingVertical: 8}}>
+>>>>>>> 1885612b7baee41efa14251978bd3eed937f962d
       {/* images */}
       <View
         style={{
@@ -238,6 +335,7 @@ const MessageCard = ({ room }) => {
         <FontAwesome5 name="users" size={24} color="#555" />
       </View>
       {/* content */}
+<<<<<<< HEAD
       <View
         style={{
           flex: 1,
@@ -256,6 +354,14 @@ const MessageCard = ({ room }) => {
           }}
         >
           {room.chatName}
+=======
+      <View style={{flex: 1, flexDirection: 'column', alignItems: 'flex-start', justifyContent: 'center', marginLeft: 16}}>
+        <Text style={{color: '#333', fontSize: 16, fontWeight: 'bold', textTransform: 'capitalize'}}>
+          {room.chatName}
+        </Text>
+        <Text style={{color: 'primaryText', fontSize: 14}}>
+          Content!
+>>>>>>> 1885612b7baee41efa14251978bd3eed937f962d
         </Text>
         <Text style={{ color: "white", fontSize: 14 }}>Content!</Text>
       </View>

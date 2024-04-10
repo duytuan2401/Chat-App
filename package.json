@@ -20,7 +20,8 @@
     "expo-status-bar": "~1.11.1",
     "firebase": "^10.10.0",
     "nativewind": "^4.0.1",
-    "react": "18.2.0",
+    "postcss": "^8.4.38",
+    "react": "^18.2.0",
     "react-dom": "18.2.0",
     "react-native": "0.73.6",
     "react-native-reanimated": "~3.6.2",
@@ -31,5 +32,8 @@
     "redux": "^5.0.1",
     "tailwindcss": "^3.4.3"
   },
-  "private": true
+  "private": true,
+  "devDependencies": {
+    "nodemon": "^3.1.0"
+  }
 }

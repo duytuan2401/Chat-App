@@ -67,7 +67,8 @@ export default function LoginScreen() {
                 console.error('Error sending password reset email:', error);
                 setAlert(true);
                 setAlertMessage("Please enter your email");
-            });
+            }
+        );
     };
 
 
